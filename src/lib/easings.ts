@@ -28,6 +28,7 @@ export abstract class AbstractEasing {
 }
 
 export class LinearInOut extends AbstractEasing {
+  public name: string = "LinearInOut";
   func(t: number): number {
     return t;
   }
@@ -36,6 +37,7 @@ export class LinearInOut extends AbstractEasing {
 //// Quadratic
 
 export class QuadEaseInOut extends AbstractEasing {
+  public name: string = "QuadEaseInOut";
   func(t: number): number {
     if (t < 0.5) return 2 * t * t;
     return -2 * t * t + 4 * t - 1;
@@ -43,12 +45,14 @@ export class QuadEaseInOut extends AbstractEasing {
 }
 
 export class QuadEaseIn extends AbstractEasing {
+  public name: string = "QuadEaseIn";
   func(t: number): number {
     return t * t;
   }
 }
 
 export class QuadEaseOut extends AbstractEasing {
+  public name: string = "QuadEaseOut";
   func(t: number): number {
     return -(t * (t - 2));
   }
@@ -57,18 +61,21 @@ export class QuadEaseOut extends AbstractEasing {
 //// Cubic
 
 export class CubicEaseIn extends AbstractEasing {
+  public name: string = "CubicEaseIn";
   func(t: number): number {
     return t * t * t;
   }
 }
 
 export class CubicEaseOut extends AbstractEasing {
+  public name: string = "CubicEaseOut";
   func(t: number): number {
     return (t - 1) * (t - 1) * (t - 1) + 1;
   }
 }
 
 export class CubicEaseInOut extends AbstractEasing {
+  public name: string = "CubicEaseInOut";
   func(t: number): number {
     if (t < 0.5) return 4 * t * t * t;
     const p = 2 * t - 2;
@@ -79,18 +86,21 @@ export class CubicEaseInOut extends AbstractEasing {
 //// Quartic
 
 export class QuarticEaseIn extends AbstractEasing {
+  public name: string = "QuarticEaseIn";
   func(t: number): number {
     return t * t * t * t;
   }
 }
 
 export class QuarticEaseOut extends AbstractEasing {
+  public name: string = "QuarticEaseOut";
   func(t: number): number {
     return (t - 1) * (t - 1) * (t - 1) * (1 - t) + 1;
   }
 }
 
 export class QuarticEaseInOut extends AbstractEasing {
+  public name: string = "QuarticEaseInOut";
   func(t: number): number {
     if (t < 0.5) return 8 * t * t * t * t;
     const p = t - 1;
@@ -101,18 +111,21 @@ export class QuarticEaseInOut extends AbstractEasing {
 //// Quintic
 
 export class QuinticEaseIn extends AbstractEasing {
+  public name: string = "QuinticEaseIn";
   func(t: number): number {
     return t * t * t * t * t;
   }
 }
 
 export class QuinticEaseOut extends AbstractEasing {
+  public name: string = "QuinticEaseOut";
   func(t: number): number {
     return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1;
   }
 }
 
 export class QuinticEaseInOut extends AbstractEasing {
+  public name: string = "QuinticEaseInOut";
   func(t: number): number {
     if (t < 0.5) return 16 * t * t * t * t * t;
     const p = 2 * t - 2;
@@ -123,18 +136,21 @@ export class QuinticEaseInOut extends AbstractEasing {
 //// Sine
 
 export class SineEaseIn extends AbstractEasing {
+  public name: string = "SineEaseIn";
   func(t: number): number {
     return Math.sin(((t - 1) * Math.PI) / 2) + 1;
   }
 }
 
 export class SineEaseOut extends AbstractEasing {
+  public name: string = "SineEaseOut";
   func(t: number): number {
     return Math.sin((t * Math.PI) / 2);
   }
 }
 
 export class SineEaseInOut extends AbstractEasing {
+  public name: string = "SineEaseInOut";
   func(t: number): number {
     return 0.5 * (1 - Math.cos(t * Math.PI));
   }
@@ -143,18 +159,21 @@ export class SineEaseInOut extends AbstractEasing {
 //// Circular
 
 export class CircularEaseIn extends AbstractEasing {
+  public name: string = "CircularEaseIn";
   func(t: number): number {
     return 1 - Math.sqrt(1 - t * t);
   }
 }
 
 export class CircularEaseOut extends AbstractEasing {
+  public name: string = "CircularEaseOut";
   func(t: number): number {
     return Math.sqrt((2 - t) * t);
   }
 }
 
 export class CircularEaseInOut extends AbstractEasing {
+  public name: string = "CircularEaseInOut";
   func(t: number): number {
     if (t < 0.5) return 0.5 * (1 - Math.sqrt(1 - 4 * (t * t)));
     return 0.5 * (Math.sqrt(-(2 * t - 3) * (2 * t - 1)) + 1);
@@ -164,18 +183,21 @@ export class CircularEaseInOut extends AbstractEasing {
 // Exponential
 
 export class ExponentialEaseIn extends AbstractEasing {
+  public name: string = "ExponentialEaseIn";
   func(t: number): number {
     return t === 0 ? 0 : Math.pow(2, 10 * (t - 1));
   }
 }
 
 export class ExponentialEaseOut extends AbstractEasing {
+  public name: string = "ExponentialEaseOut";
   func(t: number): number {
     return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
   }
 }
 
 export class ExponentialEaseInOut extends AbstractEasing {
+  public name: string = "ExponentialEaseInOut";
   func(t: number): number {
     if (t === 0 || t === 1) return t;
     if (t < 0.5) return 0.5 * Math.pow(2, 20 * t - 10);
@@ -186,18 +208,21 @@ export class ExponentialEaseInOut extends AbstractEasing {
 // Elastic
 
 export class ElasticEaseIn extends AbstractEasing {
+  public name: string = "ElasticEaseIn";
   func(t: number): number {
     return Math.sin(((13 * Math.PI) / 2) * t) * Math.pow(2, 10 * (t - 1));
   }
 }
 
 export class ElasticEaseOut extends AbstractEasing {
+  public name: string = "ElasticEaseOut";
   func(t: number): number {
     return Math.sin(((-13 * Math.PI) / 2) * (t + 1)) * Math.pow(2, -10 * t) + 1;
   }
 }
 
 export class ElasticEaseInOut extends AbstractEasing {
+  public name: string = "ElasticEaseInOut";
   func(t: number): number {
     if (t < 0.5)
       return (
@@ -217,12 +242,14 @@ export class ElasticEaseInOut extends AbstractEasing {
 // Back
 
 export class BackEaseIn extends AbstractEasing {
+  public name: string = "BackEaseIn";
   func(t: number): number {
     return t * t * t - t * Math.sin(t * Math.PI);
   }
 }
 
 export class BackEaseOut extends AbstractEasing {
+  public name: string = "BackEaseOut";
   func(t: number): number {
     const p = 1 - t;
     return 1 - (p * p * p - p * Math.sin(p * Math.PI));
@@ -230,6 +257,7 @@ export class BackEaseOut extends AbstractEasing {
 }
 
 export class BackEaseInOut extends AbstractEasing {
+  public name: string = "BackEaseInOut";
   func(t: number): number {
     if (t < 0.5) {
       const p = 2 * t;
@@ -244,12 +272,14 @@ export class BackEaseInOut extends AbstractEasing {
 // Bounce
 
 export class BounceEaseIn extends AbstractEasing {
+  public name: string = "BounceEaseIn";
   func(t: number): number {
     return 1 - new BounceEaseOut(0, 1, 1).func(1 - t);
   }
 }
 
 export class BounceEaseOut extends AbstractEasing {
+  public name: string = "BounceEaseOut";
   func(t: number): number {
     if (t < 4 / 11) return (121 * t * t) / 16;
     else if (t < 8 / 11)
@@ -261,6 +291,7 @@ export class BounceEaseOut extends AbstractEasing {
 }
 
 export class BounceEaseInOut extends AbstractEasing {
+  public name: string = "BounceEaseInOut";
   func(t: number): number {
     if (t < 0.5) return 0.5 * new BounceEaseIn(0, 1, 1).func(t * 2);
     return 0.5 * new BounceEaseOut(0, 1, 1).func(t * 2 - 1) + 0.5;
@@ -302,7 +333,7 @@ export const EASINGS = [
   BounceEaseOut,
   BounceEaseInOut,
 ].map((Clazz) => ({
-  name: new Clazz().constructor.name,
+  name: new Clazz().name,
   func: (t: number) => new Clazz().func(t),
 }));
 
