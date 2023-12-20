@@ -105,7 +105,7 @@ function App() {
             marginRight: "40px",
           }}
         >
-          <h1>Options</h1>
+          <h1 style={{ marginTop: 0 }}>Options</h1>
           <form id="options" onSubmit={handleSubmit(onSubmit)}>
             <label>FPS</label>
             <input {...register("fps", { valueAsNumber: true, min: 0 })} />
