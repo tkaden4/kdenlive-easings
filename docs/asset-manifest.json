@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/static/css/main.fa866e85.css",
-    "main.js": "/static/js/main.76842480.js",
-    "index.html": "/index.html",
-    "main.fa866e85.css.map": "/static/css/main.fa866e85.css.map",
-    "main.76842480.js.map": "/static/js/main.76842480.js.map"
+    "main.css": "/kdenlive-easings/static/css/main.fa866e85.css",
+    "main.js": "/kdenlive-easings/static/js/main.154c41bd.js",
+    "index.html": "/kdenlive-easings/index.html",
+    "main.fa866e85.css.map": "/kdenlive-easings/static/css/main.fa866e85.css.map",
+    "main.154c41bd.js.map": "/kdenlive-easings/static/js/main.154c41bd.js.map"
   },
   "entrypoints": [
     "static/css/main.fa866e85.css",
-    "static/js/main.76842480.js"
+    "static/js/main.154c41bd.js"
   ]
 }

@@ -43,6 +43,7 @@
       "last 1 safari version"
     ]
   },
+  "homepage": "/kdenlive-easings",
   "devDependencies": {
     "@types/lodash": "^4.14.202"
   }

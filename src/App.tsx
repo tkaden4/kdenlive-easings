@@ -44,7 +44,7 @@ function App() {
     }
   };
 
-  const { register, handleSubmit, watch, formState } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     defaultValues: {
       fps: 60,
       duration: 5,
