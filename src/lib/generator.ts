@@ -1,4 +1,4 @@
-import { AbstractEasing, EasingFunc } from "./easings";
+import { EasingFunc } from "./easings";
 
 /**
  * Linear interpolate on the scale given by a to b, using t as the point on that scale.

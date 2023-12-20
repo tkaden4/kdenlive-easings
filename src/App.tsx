@@ -1,11 +1,11 @@
-import React from "react";
-import { EASINGS, EASINGS_MAP, LinearInOut } from "./lib/easings";
-import { useForm } from "react-hook-form";
-import { generateKeyFrameJSON } from "./lib/generator";
 import hi from "highlight.js";
 import hijson from "highlight.js/lib/languages/json";
-import { selectElementContents } from "./util";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { parseClip } from "./lib/clip";
+import { EASINGS, EASINGS_MAP } from "./lib/easings";
+import { generateKeyFrameJSON } from "./lib/generator";
+import { selectElementContents } from "./util";
 
 hi.registerLanguage("json", hijson);
 
