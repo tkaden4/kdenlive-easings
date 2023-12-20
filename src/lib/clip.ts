@@ -1,5 +1,7 @@
 export type Clip = {
   fps: number;
+  duration: number;
+  durationFrames: number;
 };
 
 export function parseClip(inputContents: string): Clip {
@@ -8,13 +10,25 @@ export function parseClip(inputContents: string): Clip {
     inputContents,
     "application/xml"
   );
-  const fps = result.firstElementChild?.getAttribute("fps");
+
+  const kdenliveScene = result.firstElementChild;
+  if (kdenliveScene == null) {
+    throw new Error("No scene");
+  }
+
+  const fps = kdenliveScene.getAttribute("fps");
   const parsedFPS = fps ? Number.parseInt(fps) : undefined;
   if (!parsedFPS || isNaN(parsedFPS)) {
     throw new Error("Parsed Clip XML has invalid FPS: " + fps);
   }
 
+  const durationFrames = +kdenliveScene.getAttribute("duration")!;
+
+  console.log(durationFrames);
+
   return {
     fps: parsedFPS,
+    durationFrames,
+    duration: durationFrames / parsedFPS,
   };
 }

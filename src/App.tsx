@@ -1,7 +1,7 @@
 import React from "react";
 import { EASINGS, EASINGS_MAP, LinearInOut } from "./lib/easings";
 import { useForm } from "react-hook-form";
-import { generateKeyframeJSON } from "./lib/generator";
+import { generateKeyFrameJSON } from "./lib/generator";
 import hi from "highlight.js";
 import hijson from "highlight.js/lib/languages/json";
 import { selectElementContents } from "./util";
@@ -44,10 +44,10 @@ function App() {
     }
   };
 
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       fps: 60,
-      duration: 5,
+      durationFrames: 60 * 5,
       ease: EASINGS[0].name,
       start: {
         x: 0,
@@ -79,8 +79,9 @@ function App() {
 
   React.useEffect(() => {
     if (values) {
-      const json = generateKeyframeJSON({
+      const json = generateKeyFrameJSON({
         ...values,
+        duration: values.durationFrames / values.fps,
         ease: {
           name: values.ease,
           func: EASINGS_MAP[values.ease],
@@ -96,6 +97,14 @@ function App() {
     }
   }, [values]);
 
+  const onInfer = (e: string) => {
+    try {
+      const inferred = parseClip(e);
+      setValue("fps", inferred.fps);
+      setValue("durationFrames", inferred.durationFrames);
+    } catch {}
+  };
+
   return (
     <div className="App" style={{ margin: "auto", padding: "20px" }}>
       <div style={{ display: "flex", flexDirection: "row" }}>
@@ -105,7 +114,24 @@ function App() {
             marginRight: "40px",
           }}
         >
-          <h1 style={{ marginTop: 0 }}>Options</h1>
+          <h1 style={{ marginTop: 0 }}>
+            Options
+            <input
+              style={{
+                fontSize: "15px",
+                marginLeft: "20px",
+                fontFamily: "monospace",
+                float: "right",
+              }}
+              placeholder="paste clip to infer"
+              onPaste={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onInfer(e.clipboardData.getData("text"));
+              }}
+            ></input>
+          </h1>
+
           <form id="options" onSubmit={handleSubmit(onSubmit)}>
             <label>FPS</label>
             <input
@@ -116,8 +142,13 @@ function App() {
               })}
             />
             <br />
-            <label>Duration</label>
-            <input {...register("duration", { valueAsNumber: true, min: 0 })} />
+            <label>Duration (frames)</label>
+            <input
+              {...register("durationFrames", {
+                valueAsNumber: true,
+                min: 0,
+              })}
+            />
             <br />
             <label>Ease Type</label>
             <select {...register("ease")}>
@@ -222,13 +253,12 @@ function App() {
               className="language-json"
             ></code>
           </pre>
-          {/* <h1>Clip Input</h1>
-          <textarea id="clip-paste"></textarea> */}
+          <br />
           <h1>How To Use</h1>
           <div>
             <iframe
-              width="560"
-              height="315"
+              width="888"
+              height="500"
               src="https://www.youtube.com/embed/1c1yGZ14XYo?si=MBIt2f1EhwV-P0UI"
               title="YouTube video player"
               frameBorder="0"

@@ -58,7 +58,7 @@ function generate_values(settings: Settings) {
   return t.join(";");
 }
 
-export function generateKeyframeJSON(settings: Settings) {
+export function generateKeyFrameJSON(settings: Settings) {
   return [
     {
       DisplayName: "Generated easing for " + settings.ease.name,
