@@ -233,11 +233,11 @@ function App() {
           <h1>Keyframe Output</h1>
           <pre
             style={{
-              minWidth: "80ch",
-              maxWidth: "80ch",
+              minWidth: "888px",
+              maxWidth: "888px",
               overflowX: "scroll",
               border: "1px solid #3a3a3c",
-              padding: "20px",
+              // padding: "20px",
             }}
           >
             <code
@@ -245,8 +245,8 @@ function App() {
                 selectElementContents(document.getElementById("keyframes")!);
               }}
               style={{
-                minWidth: "80ch",
-                maxWidth: "80ch",
+                minWidth: "888px",
+                maxWidth: "888px",
                 overflowX: "scroll",
               }}
               id="keyframes"
