@@ -217,6 +217,7 @@ function App() {
             />
           </form>
           <div>
+            <br></br>
             <h1>Preview</h1>
             <canvas
               width={500}
