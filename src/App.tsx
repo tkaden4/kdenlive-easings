@@ -108,7 +108,13 @@ function App() {
           <h1 style={{ marginTop: 0 }}>Options</h1>
           <form id="options" onSubmit={handleSubmit(onSubmit)}>
             <label>FPS</label>
-            <input {...register("fps", { valueAsNumber: true, min: 0 })} />
+            <input
+              {...register("fps", {
+                valueAsNumber: true,
+                min: 0,
+                required: true,
+              })}
+            />
             <br />
             <label>Duration</label>
             <input {...register("duration", { valueAsNumber: true, min: 0 })} />
@@ -195,9 +201,6 @@ function App() {
         <div id="io">
           <h1>Keyframe Output</h1>
           <pre
-            onClick={() => {
-              selectElementContents(document.getElementById("keyframes")!);
-            }}
             style={{
               minWidth: "80ch",
               maxWidth: "80ch",
@@ -207,6 +210,9 @@ function App() {
             }}
           >
             <code
+              onClick={() => {
+                selectElementContents(document.getElementById("keyframes")!);
+              }}
               style={{
                 minWidth: "80ch",
                 maxWidth: "80ch",
