@@ -15,6 +15,7 @@ export function linearInterpolate(a: number, b: number, t: number): number {
 export type Settings = {
   duration: number;
   fps: number;
+  frames: number;
   ease: {
     name: string;
     func: EasingFunc;
@@ -31,13 +32,9 @@ export type Keyframe = {
   height: number;
 };
 
-function get_frames(settings: Settings) {
-  return settings.fps * settings.duration;
-}
-
 function generate_values(settings: Settings) {
   const t: string[] = [];
-  const max_range = get_frames(settings) - 1;
+  const max_range = settings.frames - 1;
 
   const start = settings.start;
   const end = settings.end;
@@ -67,7 +64,7 @@ export function generateKeyFrameJSON(settings: Settings) {
       min: 0,
       name: "rect",
       opacity: true,
-      out: get_frames(settings),
+      out: settings.frames,
       type: 7,
       value: generate_values(settings),
     },

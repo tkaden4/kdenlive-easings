@@ -82,6 +82,7 @@ function App() {
       const json = generateKeyFrameJSON({
         ...values,
         duration: values.durationFrames / values.fps,
+        frames: values.durationFrames,
         ease: {
           name: values.ease,
           func: EASINGS_MAP[values.ease],
