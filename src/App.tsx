@@ -4,8 +4,16 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { parseClip } from "./lib/clip";
 import { EASINGS, EASINGS_MAP } from "./lib/easings";
-import { generateKeyFrameJSON } from "./lib/generator";
+import { Settings, generateKeyFrameJSON } from "./lib/generator";
 import { selectElementContents } from "./util";
+import { parseRawEffect, rawEffectsParser } from "./lib/keyframe";
+import _ from "lodash";
+import {
+  RectangleEntry,
+  parseRectangleEntry,
+  parseRotationEntry,
+} from "./lib/effects";
+import { PRESETS, Preset } from "./lib/presets";
 
 hi.registerLanguage("json", hijson);
 
@@ -44,12 +52,12 @@ function App() {
     }
   };
 
-  const { register, handleSubmit, watch, setValue } = useForm({
+  const { register, handleSubmit, watch, setValue, reset } = useForm({
     defaultValues: {
-      fps: 60,
-      durationFrames: 60 * 5,
+      fps: 30,
       ease: EASINGS[0].name,
       start: {
+        frame: 0,
         x: 0,
         y: 0,
         opacity: 100,
@@ -58,6 +66,7 @@ function App() {
         rotation: 0,
       },
       end: {
+        frame: 0,
         x: 0,
         y: 0,
         opacity: 100,
@@ -72,6 +81,8 @@ function App() {
 
   const values = watch();
 
+  type FormState = typeof values;
+
   const ease = values.ease;
   React.useEffect(() => {
     if (ease) {
@@ -83,8 +94,6 @@ function App() {
     if (values) {
       const json = generateKeyFrameJSON({
         ...values,
-        duration: values.durationFrames / values.fps,
-        frames: values.durationFrames,
         ease: {
           name: values.ease,
           func: EASINGS_MAP[values.ease],
@@ -100,16 +109,72 @@ function App() {
     }
   }, [values]);
 
-  const onInfer = (e: string) => {
+  const onInferFromClip = (e: string) => {
     try {
       const inferred = parseClip(e);
       setValue("fps", inferred.fps);
-      setValue("durationFrames", inferred.durationFrames);
+      setValue("start.frame", 0);
+      setValue("end.frame", inferred.durationFrames);
     } catch {}
   };
 
+  const onInferFromKeyFrames = (e: string) => {
+    try {
+      const effects = rawEffectsParser.parse(JSON.parse(e)).map(parseRawEffect);
+
+      if (effects.length < 1) {
+        return;
+      }
+
+      for (const effect of effects) {
+        const [first, last] = [_.first(effect.entries), _.last(effect.entries)];
+
+        if (first === undefined || last === undefined) {
+          return;
+        }
+
+        if (first === last) {
+          return;
+        }
+        setValue("start.frame", first.frame);
+        setValue("end.frame", last.frame);
+
+        if (effect.name === "rect") {
+          const setFrame = (frame: "start" | "end", entry: RectangleEntry) => {
+            setValue(`${frame}.x`, entry.x);
+            setValue(`${frame}.y`, entry.y);
+            setValue(`${frame}.width`, entry.width);
+            setValue(`${frame}.height`, entry.height);
+            setValue(`${frame}.opacity`, entry.opacity);
+          };
+
+          setFrame("start", parseRectangleEntry(first));
+          setFrame("end", parseRectangleEntry(last));
+        } else if (effect.name === "rotation") {
+          const firstFrame = parseRotationEntry(first);
+          const lastFrame = parseRotationEntry(last);
+
+          setValue("start.rotation", firstFrame.angle);
+          setValue("end.rotation", lastFrame.angle);
+        }
+      }
+    } catch {}
+  };
+
+  const onChoosePreset = (presetName: string) => {
+    const preset = PRESETS.find((x) => x.name === presetName);
+    if (preset === undefined) {
+      return;
+    }
+    const newValues: FormState = _.merge(values, preset.settings);
+    reset(newValues);
+  };
+
   return (
-    <div className="App" style={{ margin: "auto", padding: "20px" }}>
+    <div
+      className="App"
+      style={{ margin: "auto", padding: "20px", textAlign: "left" }}
+    >
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div
           id="form"
@@ -117,6 +182,14 @@ function App() {
             marginRight: "40px",
           }}
         >
+          <select onChange={(e) => onChoosePreset(e.target.value)}>
+            <option value="<choose preset>">{"<choose preset>"}</option>
+            {PRESETS.map((x, i) => (
+              <option key={i} value={x.name}>
+                {x.name}
+              </option>
+            ))}
+          </select>
           <h1 style={{ marginTop: 0 }}>
             Options
             <input
@@ -126,15 +199,29 @@ function App() {
                 fontFamily: "monospace",
                 float: "right",
               }}
-              placeholder="paste clip to infer"
+              placeholder="paste clip"
               onPaste={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                onInfer(e.clipboardData.getData("text"));
+                onInferFromClip(e.clipboardData.getData("text"));
+              }}
+            ></input>
+            <input
+              style={{
+                fontSize: "15px",
+                marginLeft: "20px",
+                fontFamily: "monospace",
+                float: "right",
+              }}
+              placeholder="paste keyframes"
+              onPaste={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onInferFromKeyFrames(e.clipboardData.getData("text"));
               }}
             ></input>
           </h1>
-
+          <br />
           <form id="options" onSubmit={handleSubmit(onSubmit)}>
             <label>FPS</label>
             <input
@@ -142,14 +229,6 @@ function App() {
                 valueAsNumber: true,
                 min: 0,
                 required: true,
-              })}
-            />
-            <br />
-            <label>Duration (frames)</label>
-            <input
-              {...register("durationFrames", {
-                valueAsNumber: true,
-                min: 0,
               })}
             />
             <br />
@@ -162,6 +241,9 @@ function App() {
               ))}
             </select>
             <h2>Start</h2>
+            <label>Frame</label>
+            <input {...register("start.frame", { valueAsNumber: true })} />
+            <br />
             <label>X</label>
             <input {...register("start.x", { valueAsNumber: true })} />
             <br />
@@ -199,6 +281,9 @@ function App() {
               })}
             />
             <h2>End</h2>
+            <label>Frame</label>
+            <input {...register("end.frame", { valueAsNumber: true })} />
+            <br />
             <label>X</label>
             <input {...register("end.x", { valueAsNumber: true })} />
             <br />
@@ -240,7 +325,7 @@ function App() {
             <h1>Preview</h1>
             <canvas
               width={500}
-              height={300}
+              height={255}
               style={{
                 border: "1px solid #3a3a3c",
                 backgroundColor: "#0a0a0c",
@@ -255,11 +340,10 @@ function App() {
             style={{
               minWidth: "888px",
               maxWidth: "888px",
-              maxHeight: "350px",
-              minHeight: "350px",
+              maxHeight: "450px",
+              minHeight: "450px",
               overflow: "scroll",
               border: "1px solid #3a3a3c",
-              // padding: "20px",
             }}
           >
             <code
@@ -279,8 +363,8 @@ function App() {
           <h1>How To Use</h1>
           <div>
             <iframe
-              width="888"
-              height="500"
+              width="712"
+              height="400"
               src="https://www.youtube.com/embed/_miwNAN1qu8?si=zPA165c-epYFVKPV"
               title="YouTube video player"
               frameBorder="0"

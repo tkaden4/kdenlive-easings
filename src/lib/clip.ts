@@ -24,8 +24,6 @@ export function parseClip(inputContents: string): Clip {
 
   const durationFrames = +kdenliveScene.getAttribute("duration")!;
 
-  console.log(durationFrames);
-
   return {
     fps: parsedFPS,
     durationFrames,

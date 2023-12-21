@@ -13,9 +13,7 @@ export function linearInterpolate(a: number, b: number, t: number): number {
 }
 
 export type Settings = {
-  duration: number;
   fps: number;
-  frames: number;
   ease: {
     name: string;
     func: EasingFunc;
@@ -25,6 +23,7 @@ export type Settings = {
 };
 
 export type Keyframe = {
+  frame: number;
   x: number;
   y: number;
   opacity: number;
@@ -33,9 +32,13 @@ export type Keyframe = {
   rotation: number;
 };
 
+function nframes(settings: Settings) {
+  return settings.end.frame - settings.start.frame;
+}
+
 function generate_values(settings: Settings) {
   const t: string[] = [];
-  const max_range = settings.frames - 1;
+  const max_range = nframes(settings) - 1;
 
   const start = settings.start;
   const end = settings.end;
@@ -50,7 +53,9 @@ function generate_values(settings: Settings) {
     const height = linearInterpolate(start.height, end.height, value);
     const opacity = linearInterpolate(start.opacity, end.opacity, value) / 100;
 
-    t.push(`${i} = ${x} ${y} ${width} ${height} ${opacity}`);
+    t.push(
+      `${settings.start.frame + i} = ${x} ${y} ${width} ${height} ${opacity}`
+    );
   }
 
   return t.join(";");
@@ -58,7 +63,7 @@ function generate_values(settings: Settings) {
 
 function generate_rotation_values(settings: Settings) {
   const t: string[] = [];
-  const max_range = settings.frames - 1;
+  const max_range = nframes(settings) - 1;
 
   const start = settings.start;
   const end = settings.end;
@@ -69,7 +74,7 @@ function generate_rotation_values(settings: Settings) {
 
     const rotation = linearInterpolate(start.rotation, end.rotation, value);
 
-    t.push(`${i} = ${rotation}`);
+    t.push(`${settings.start.frame + i} = ${rotation}`);
   }
 
   return t.join(";");
@@ -84,7 +89,7 @@ export function generateKeyFrameJSON(settings: Settings) {
       min: 0,
       name: "rect",
       opacity: true,
-      out: settings.frames,
+      out: settings.end.frame,
       type: 7,
       value: generate_values(settings),
     },
@@ -95,7 +100,7 @@ export function generateKeyFrameJSON(settings: Settings) {
       min: -360,
       name: "rotation",
       opacity: true,
-      out: settings.frames,
+      out: settings.end.frame,
       type: 9,
       value: generate_rotation_values(settings),
     },
