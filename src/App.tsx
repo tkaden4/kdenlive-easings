@@ -55,6 +55,7 @@ function App() {
         opacity: 100,
         width: 1920,
         height: 1080,
+        rotation: 0,
       },
       end: {
         x: 0,
@@ -62,6 +63,7 @@ function App() {
         opacity: 100,
         width: 1920,
         height: 1080,
+        rotation: 0,
       },
     },
   });
@@ -188,6 +190,14 @@ function App() {
                 max: 100,
               })}
             />
+            <br />
+
+            <label>Rotation</label>
+            <input
+              {...register("start.rotation", {
+                valueAsNumber: true,
+              })}
+            />
             <h2>End</h2>
             <label>X</label>
             <input {...register("end.x", { valueAsNumber: true })} />
@@ -216,6 +226,14 @@ function App() {
                 max: 100,
               })}
             />
+            <br />
+
+            <label>Rotation</label>
+            <input
+              {...register("end.rotation", {
+                valueAsNumber: true,
+              })}
+            />
           </form>
           <div>
             <br></br>
@@ -237,7 +255,9 @@ function App() {
             style={{
               minWidth: "888px",
               maxWidth: "888px",
-              overflowX: "scroll",
+              maxHeight: "350px",
+              minHeight: "350px",
+              overflow: "scroll",
               border: "1px solid #3a3a3c",
               // padding: "20px",
             }}
