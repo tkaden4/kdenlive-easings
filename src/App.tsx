@@ -250,7 +250,7 @@ function App() {
                 </option>
               ))}
             </select>
-            <h2>Start</h2>
+            <h2 style={{ color: "deepskyblue" }}>Start</h2>
             <label>Frame</label>
             <input {...register("start.frame", { valueAsNumber: true })} />
             <br />
@@ -290,7 +290,7 @@ function App() {
                 valueAsNumber: true,
               })}
             />
-            <h2>End</h2>
+            <h2 style={{ color: "tomato" }}>End</h2>
             <label>Frame</label>
             <input {...register("end.frame", { valueAsNumber: true })} />
             <br />
