@@ -31,34 +31,33 @@ function App() {
       // We want to show overshoot for things like elastic
       const options: Partial<GraphOptions> = {
         domain: [0, 1],
-        range: [-1, 2],
+        range: [-0.25, 1.25],
         width: 1,
+        dash: 5,
       };
 
       // Draw the ease function
       drawFunction(canvas, EASINGS_MAP[ease], {
-        color: "powderblue",
+        color: "white",
         width: 3,
         ...options,
+        dash: 0,
       });
 
       // Draw the upper boundary
-      drawFunction(canvas, (_x) => 1.5, {
-        color: "grey",
+      drawFunction(canvas, (_x) => 1, {
+        color: "tomato",
         ...options,
-        dash: 5,
       });
       // Draw the 0 boundary
       drawFunction(canvas, (_x) => 0.5, {
         color: "grey",
-        dash: 5,
         ...options,
       });
       // Draw the lower boundary
-      drawFunction(canvas, (_x) => -0.5, {
-        color: "grey",
+      drawFunction(canvas, (_x) => -0, {
+        color: "deepskyblue",
         ...options,
-        dash: 5,
       });
     }
   };
