@@ -31,7 +31,7 @@ function App() {
       // We want to show overshoot for things like elastic
       const options: Partial<GraphOptions> = {
         domain: [0, 1],
-        range: [-0.25, 1.25],
+        range: [-0.5, 1.5],
         width: 1,
         dash: 5,
       };
