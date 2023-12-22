@@ -27,12 +27,14 @@ export function drawFunction(
   const height = canvas.height;
 
   const f = (canvasX: number): number => {
+    // const xScalingFactor = 1 / (maxX - minX);
+
     const x = linearInterpolate(minX, maxX, canvasX / width) - minX;
     const y = func(x);
 
-    const scalingFactor = maxY - minY;
+    const yScalingFactor = 1 / (maxY - minY);
 
-    const canvasY = linearInterpolate(0, height, y - minY) / scalingFactor;
+    const canvasY = linearInterpolate(0, height, y - minY) * yScalingFactor;
     return height - canvasY;
   };
 
