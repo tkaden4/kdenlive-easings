@@ -14,32 +14,9 @@ import {
   parseRotationEntry,
 } from "./lib/effects";
 import { PRESETS, Preset } from "./lib/presets";
+import { GraphOptions, drawFunction } from "./lib/graph";
 
 hi.registerLanguage("json", hijson);
-
-function drawFunction(canvas: HTMLCanvasElement, func: (x: number) => number) {
-  const ctx = canvas.getContext("2d");
-  if (ctx === null) {
-    return;
-  }
-  const width = canvas.width;
-  const height = canvas.height;
-
-  ctx.clearRect(0, 0, width, height);
-
-  for (let i = 1; i < width; ++i) {
-    const x = i / width;
-    const y = func(x) * height;
-    const y_prev = func((i - 1) / width) * height;
-
-    ctx.beginPath();
-    ctx.moveTo(i - 1, y_prev);
-    ctx.lineTo(i, y);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "white";
-    ctx.stroke();
-  }
-}
 
 function App() {
   const generatePreview = (ease: string) => {
@@ -48,7 +25,41 @@ function App() {
       return;
     }
     if (canvas instanceof HTMLCanvasElement) {
-      drawFunction(canvas, EASINGS_MAP[ease]);
+      const ctx = canvas.getContext("2d")!;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // We want to show overshoot for things like elastic
+      const options: Partial<GraphOptions> = {
+        domain: [0, 1],
+        range: [-1, 2],
+        width: 1,
+      };
+
+      // Draw the ease function
+      drawFunction(canvas, EASINGS_MAP[ease], {
+        color: "powderblue",
+        width: 3,
+        ...options,
+      });
+
+      // Draw the upper boundary
+      drawFunction(canvas, (_x) => 1.5, {
+        color: "grey",
+        ...options,
+        dash: 5,
+      });
+      // Draw the 0 boundary
+      drawFunction(canvas, (_x) => 0.5, {
+        color: "grey",
+        dash: 5,
+        ...options,
+      });
+      // Draw the lower boundary
+      drawFunction(canvas, (_x) => -0.5, {
+        color: "grey",
+        ...options,
+        dash: 5,
+      });
     }
   };
 
