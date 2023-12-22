@@ -8,7 +8,6 @@ import { EasingFunc } from "./easings";
  *   4.2 == lerp(1, 5, 0.8)
  */
 export function linearInterpolate(a: number, b: number, t: number): number {
-  t = Math.max(0, Math.min(t, 1));
   return a === b ? a : (1 - t) * a + t * b;
 }
 
