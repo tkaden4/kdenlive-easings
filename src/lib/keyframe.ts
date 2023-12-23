@@ -40,7 +40,7 @@ function parseKeyframeEntries(value: string): Array<KeyFrameEntry> {
       values: values
         .split(" ")
         .map((x) => x.trim())
-        .map((y) => Number.parseInt(y)),
+        .map((y) => Number.parseFloat(y)),
     };
   };
 
