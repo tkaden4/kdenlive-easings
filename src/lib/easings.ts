@@ -18,6 +18,7 @@ export abstract class AbstractEasing {
   }
 
   abstract func(t: number): number;
+  abstract name: string;
 
   ease(alpha: number): number {
     const t =
@@ -296,6 +297,22 @@ export class BounceEaseInOut extends AbstractEasing {
     if (t < 0.5) return 0.5 * new BounceEaseIn(0, 1, 1).func(t * 2);
     return 0.5 * new BounceEaseOut(0, 1, 1).func(t * 2 - 1) + 0.5;
   }
+}
+
+// Divide the output range into n sections, and apply the easing func to get between each
+export function repeatEasing(easing: EasingFunc, n: number): EasingFunc {
+  if (n < 1) {
+    return easing;
+  }
+  const one = easing(1) / n;
+  const chunk = 1 / n;
+
+  return (x: number) => {
+    const nchunk = Math.floor(x / chunk);
+    const actualX = (x - nchunk * chunk) / chunk;
+
+    return one * nchunk + easing(actualX) / n;
+  };
 }
 
 export const EASINGS = [

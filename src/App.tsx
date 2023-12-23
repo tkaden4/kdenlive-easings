@@ -3,7 +3,7 @@ import hijson from "highlight.js/lib/languages/json";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { parseClip } from "./lib/clip";
-import { EASINGS, EASINGS_MAP } from "./lib/easings";
+import { EASINGS, EASINGS_MAP, repeatEasing } from "./lib/easings";
 import { Settings, generateKeyFrameJSON } from "./lib/generator";
 import { selectElementContents } from "./util";
 import { parseRawEffect, rawEffectsParser } from "./lib/keyframe";
@@ -19,7 +19,7 @@ import { GraphOptions, drawFunction } from "./lib/graph";
 hi.registerLanguage("json", hijson);
 
 function App() {
-  const generatePreview = (ease: string) => {
+  const generatePreview = (ease: string, repeat: number) => {
     const canvas = document.getElementById("preview-canvas");
     if (!canvas) {
       return;
@@ -28,16 +28,17 @@ function App() {
       const ctx = canvas.getContext("2d")!;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      const fn = repeatEasing(EASINGS_MAP[ease], repeat);
+
       // We want to show overshoot for things like elastic
       const options: Partial<GraphOptions> = {
         domain: [0, 1],
-        range: [-0.5, 1.5],
+        range: [-0.4, 1.4],
         width: 1,
         dash: 5,
       };
-
       // Draw the ease function
-      drawFunction(canvas, EASINGS_MAP[ease], {
+      drawFunction(canvas, fn, {
         color: "white",
         width: 3,
         ...options,
@@ -66,6 +67,7 @@ function App() {
     defaultValues: {
       fps: 30,
       ease: EASINGS[0].name,
+      repeat: 1,
       start: {
         frame: 0,
         x: 0,
@@ -94,11 +96,13 @@ function App() {
   type FormState = typeof values;
 
   const ease = values.ease;
+  const repeat = values.repeat;
+
   React.useEffect(() => {
     if (ease) {
-      generatePreview(ease);
+      generatePreview(ease, repeat);
     }
-  }, [ease]);
+  }, [ease, repeat]);
 
   React.useEffect(() => {
     if (values) {
@@ -106,7 +110,7 @@ function App() {
         ...values,
         ease: {
           name: values.ease,
-          func: EASINGS_MAP[values.ease],
+          func: repeatEasing(EASINGS_MAP[values.ease], values.repeat),
         },
       });
 
@@ -250,6 +254,16 @@ function App() {
                 </option>
               ))}
             </select>
+            <br />
+            <label>Repeat</label>
+            <input
+              {...register("repeat", {
+                valueAsNumber: true,
+                min: 1,
+                required: true,
+              })}
+            />
+
             <h2 style={{ color: "deepskyblue" }}>Start</h2>
             <label>Frame</label>
             <input {...register("start.frame", { valueAsNumber: true })} />
@@ -331,20 +345,32 @@ function App() {
             />
           </form>
           <div>
-            <br></br>
-            <h1>Preview</h1>
-            <canvas
-              width={500}
-              height={255}
-              style={{
-                border: "1px solid #3a3a3c",
-                backgroundColor: "#0a0a0c",
-              }}
-              id="preview-canvas"
-            ></canvas>
+            <br />
+            <div>
+              <iframe
+                width="450"
+                height="254"
+                src="https://www.youtube.com/embed/_miwNAN1qu8?si=zPA165c-epYFVKPV"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
           </div>
         </div>
         <div id="io">
+          <h1>Preview</h1>
+          <canvas
+            width={888}
+            height={400}
+            style={{
+              border: "1px solid #3a3a3c",
+              backgroundColor: "#0a0a0c",
+            }}
+            id="preview-canvas"
+          ></canvas>
+          <br></br>
           <h1>Keyframe Output</h1>
           <pre
             style={{
@@ -369,19 +395,6 @@ function App() {
               className="language-json"
             ></code>
           </pre>
-          <br />
-          <h1>How To Use</h1>
-          <div>
-            <iframe
-              width="712"
-              height="400"
-              src="https://www.youtube.com/embed/_miwNAN1qu8?si=zPA165c-epYFVKPV"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
-          </div>
         </div>
       </div>
     </div>
