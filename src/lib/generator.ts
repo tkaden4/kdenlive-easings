@@ -83,7 +83,7 @@ export function generateKeyFrameJSON(settings: Settings) {
   return [
     {
       DisplayName: "Generated easing for " + settings.ease.name,
-      in: settings.start.frame,
+      in: 0,
       max: 0,
       min: 0,
       name: "rect",
@@ -94,7 +94,7 @@ export function generateKeyFrameJSON(settings: Settings) {
     },
     {
       DisplayName: "Generated rotation easing for " + settings.ease.name,
-      in: settings.start.frame,
+      in: 0,
       max: 360,
       min: -360,
       name: "rotation",
