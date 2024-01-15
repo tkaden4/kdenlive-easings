@@ -324,7 +324,6 @@ export const EASINGS = [
   CubicEaseOut,
   CubicEaseInOut,
   QuarticEaseIn,
-  QuadEaseOut,
   QuarticEaseInOut,
   QuarticEaseIn,
   QuarticEaseOut,
