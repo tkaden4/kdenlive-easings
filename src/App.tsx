@@ -1,20 +1,20 @@
 import hi from "highlight.js";
 import hijson from "highlight.js/lib/languages/json";
+import _ from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { parseClip } from "./lib/clip";
 import { EASINGS, EASINGS_MAP, repeatEasing } from "./lib/easings";
-import { Settings, generateKeyFrameJSON } from "./lib/generator";
-import { selectElementContents } from "./util";
-import { parseRawEffect, rawEffectsParser } from "./lib/keyframe";
-import _ from "lodash";
 import {
   RectangleEntry,
   parseRectangleEntry,
   parseRotationEntry,
 } from "./lib/effects";
-import { PRESETS, Preset } from "./lib/presets";
+import { generateKeyFrameJSON } from "./lib/generator";
 import { GraphOptions, drawFunction } from "./lib/graph";
+import { parseRawEffect, rawEffectsParser } from "./lib/keyframe";
+import { PRESETS } from "./lib/presets";
+import { selectElementContents } from "./util";
 
 hi.registerLanguage("json", hijson);
 
