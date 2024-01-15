@@ -17,6 +17,7 @@ export function parseClip(inputContents: string): Clip {
   }
 
   const fps = kdenliveScene.getAttribute("fps");
+  // I guess this should work with things like 29.9 fps or whatever bs there is
   const parsedFPS = fps ? Number.parseInt(fps) : undefined;
   if (!parsedFPS || isNaN(parsedFPS)) {
     throw new Error("Parsed Clip XML has invalid FPS: " + fps);
