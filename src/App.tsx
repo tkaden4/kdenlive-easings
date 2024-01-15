@@ -37,13 +37,6 @@ function App() {
         width: 1,
         dash: 5,
       };
-      // Draw the ease function
-      drawFunction(canvas, fn, {
-        color: "white",
-        width: 3,
-        ...options,
-        dash: 0,
-      });
 
       // Draw the upper boundary
       drawFunction(canvas, (_x) => 1, {
@@ -59,6 +52,25 @@ function App() {
       drawFunction(canvas, (_x) => -0, {
         color: "deepskyblue",
         ...options,
+      });
+      // Draw all the repeat boundaries
+      for (let i = 1; i < repeat; ++i) {
+        if (i === repeat / 2) {
+          continue;
+        }
+        drawFunction(canvas, (_x) => i / repeat, {
+          // color: "#4a4a4c",
+          color: "#3a3a3a",
+          ...options,
+        });
+      }
+
+      // Draw the ease function
+      drawFunction(canvas, fn, {
+        color: "white",
+        ...options,
+        width: 1,
+        dash: 0,
       });
     }
   };
